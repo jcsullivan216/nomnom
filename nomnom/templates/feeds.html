@@ -1,0 +1,405 @@
+{% extends "base.html" %}
+
+{% block title %}Data Feeds{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .feeds-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 16px;
+        margin-bottom: 30px;
+    }
+
+    .summary-stat {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .summary-stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+
+    .summary-stat-label {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        margin-top: 4px;
+    }
+
+    .stat-healthy { color: var(--accent-green); }
+    .stat-degraded { color: var(--accent-yellow); }
+    .stat-down { color: var(--accent-red); }
+    .stat-unknown { color: var(--text-muted); }
+
+    .category-section {
+        margin-bottom: 30px;
+    }
+
+    .category-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .category-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .category-count {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        background: var(--bg-hover);
+        padding: 4px 10px;
+        border-radius: 12px;
+    }
+
+    .feeds-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 16px;
+    }
+
+    .feed-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px;
+        position: relative;
+        transition: all 0.2s;
+    }
+
+    .feed-card:hover {
+        border-color: var(--accent-blue);
+        transform: translateY(-2px);
+    }
+
+    .feed-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 12px;
+    }
+
+    .feed-name {
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 4px;
+    }
+
+    .feed-description {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+        line-height: 1.4;
+        margin-bottom: 16px;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .status-healthy {
+        background: rgba(63, 185, 80, 0.15);
+        color: var(--accent-green);
+    }
+
+    .status-degraded {
+        background: rgba(210, 153, 34, 0.15);
+        color: var(--accent-yellow);
+    }
+
+    .status-down {
+        background: rgba(248, 81, 73, 0.15);
+        color: var(--accent-red);
+    }
+
+    .status-unknown {
+        background: var(--bg-hover);
+        color: var(--text-muted);
+    }
+
+    .status-not_configured {
+        background: rgba(88, 166, 255, 0.15);
+        color: var(--accent-blue);
+    }
+
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+
+    .status-healthy .status-dot { background: var(--accent-green); }
+    .status-degraded .status-dot { background: var(--accent-yellow); }
+    .status-down .status-dot { background: var(--accent-red); }
+    .status-unknown .status-dot { background: var(--text-muted); }
+    .status-not_configured .status-dot { background: var(--accent-blue); animation: none; }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+
+    .feed-meta {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
+    }
+
+    .meta-item {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .meta-label {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+    }
+
+    .meta-value {
+        font-size: 0.9rem;
+        color: var(--text-primary);
+    }
+
+    .meta-value.fast { color: var(--accent-green); }
+    .meta-value.slow { color: var(--accent-yellow); }
+    .meta-value.timeout { color: var(--accent-red); }
+
+    .feed-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--accent-blue);
+        text-decoration: none;
+        font-size: 0.85rem;
+        margin-top: 12px;
+    }
+
+    .feed-link:hover {
+        text-decoration: underline;
+    }
+
+    .auth-badge {
+        font-size: 0.7rem;
+        padding: 2px 6px;
+        border-radius: 4px;
+        background: rgba(163, 113, 247, 0.15);
+        color: var(--accent-purple);
+        margin-left: 8px;
+    }
+
+    .free-badge {
+        font-size: 0.7rem;
+        padding: 2px 6px;
+        border-radius: 4px;
+        background: rgba(63, 185, 80, 0.15);
+        color: var(--accent-green);
+        margin-left: 8px;
+    }
+
+    .refresh-btn {
+        background: var(--accent-blue);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s;
+    }
+
+    .refresh-btn:hover {
+        background: #4c9aed;
+    }
+
+    .refresh-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .refresh-btn.loading .spinner {
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .error-message {
+        font-size: 0.8rem;
+        color: var(--accent-red);
+        margin-top: 8px;
+        padding: 8px;
+        background: rgba(248, 81, 73, 0.1);
+        border-radius: 6px;
+    }
+
+    .last-check {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-top: 8px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>&#128225; Data Feeds</h1>
+    <p>Monitor connected data sources and API health status</p>
+</div>
+
+<div class="feeds-summary">
+    <div class="summary-stat">
+        <div class="summary-stat-value">{{ summary.total }}</div>
+        <div class="summary-stat-label">Total Sources</div>
+    </div>
+    <div class="summary-stat">
+        <div class="summary-stat-value stat-healthy">{{ summary.healthy }}</div>
+        <div class="summary-stat-label">Healthy</div>
+    </div>
+    <div class="summary-stat">
+        <div class="summary-stat-value stat-degraded">{{ summary.degraded }}</div>
+        <div class="summary-stat-label">Degraded</div>
+    </div>
+    <div class="summary-stat">
+        <div class="summary-stat-value stat-down">{{ summary.down }}</div>
+        <div class="summary-stat-label">Down</div>
+    </div>
+    <div class="summary-stat">
+        <div class="summary-stat-value stat-unknown">{{ summary.not_configured }}</div>
+        <div class="summary-stat-label">Need Config</div>
+    </div>
+    <div class="summary-stat">
+        <div class="summary-stat-value">{{ summary.health_percentage }}%</div>
+        <div class="summary-stat-label">Health Score</div>
+    </div>
+</div>
+
+<div style="margin-bottom: 24px;">
+    <button class="refresh-btn" onclick="refreshFeeds()" id="refresh-btn">
+        <span class="spinner">&#8635;</span>
+        Check All Feeds
+    </button>
+    <span class="last-check" id="last-refresh">
+        {% if last_check %}Last checked: {{ last_check }}{% else %}Not checked yet{% endif %}
+    </span>
+</div>
+
+{% for category, feeds in categories.items() %}
+<div class="category-section">
+    <div class="category-header">
+        <h2 class="category-title">
+            {% if category == "Prediction Markets" %}&#127922;{% endif %}
+            {% if category == "On-Chain Data" %}&#9939;{% endif %}
+            {% if category == "Congressional Trading" %}&#127963;{% endif %}
+            {% if category == "Regulatory" %}&#128220;{% endif %}
+            {% if category == "OSINT" %}&#128373;{% endif %}
+            {% if category == "Market Data" %}&#128200;{% endif %}
+            {% if category == "Aggregators" %}&#128279;{% endif %}
+            {{ category }}
+        </h2>
+        <span class="category-count">{{ feeds|length }} sources</span>
+    </div>
+
+    <div class="feeds-grid">
+        {% for feed in feeds %}
+        <div class="feed-card" id="feed-{{ feed.id }}">
+            <div class="feed-header">
+                <div>
+                    <div class="feed-name">
+                        {{ feed.name }}
+                        {% if feed.is_free %}
+                        <span class="free-badge">FREE</span>
+                        {% endif %}
+                        {% if feed.requires_auth %}
+                        <span class="auth-badge">AUTH</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <span class="status-badge status-{{ feed.status.value }}">
+                    <span class="status-dot"></span>
+                    {{ feed.status.value | replace("_", " ") }}
+                </span>
+            </div>
+
+            <div class="feed-description">{{ feed.description }}</div>
+
+            <div class="feed-meta">
+                <div class="meta-item">
+                    <span class="meta-label">Response Time</span>
+                    <span class="meta-value {% if feed.response_time_ms and feed.response_time_ms < 500 %}fast{% elif feed.response_time_ms and feed.response_time_ms < 2000 %}slow{% elif feed.response_time_ms %}timeout{% endif %}">
+                        {% if feed.response_time_ms %}{{ feed.response_time_ms }}ms{% else %}--{% endif %}
+                    </span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Rate Limit</span>
+                    <span class="meta-value">{{ feed.rate_limit or "Unknown" }}</span>
+                </div>
+            </div>
+
+            {% if feed.error_message %}
+            <div class="error-message">&#9888; {{ feed.error_message }}</div>
+            {% endif %}
+
+            <a href="{{ feed.url }}" target="_blank" rel="noopener" class="feed-link">
+                View Source &#8599;
+            </a>
+
+            {% if feed.last_check %}
+            <div class="last-check">Checked: {{ feed.last_check.strftime('%H:%M:%S') }}</div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function refreshFeeds() {
+    const btn = document.getElementById('refresh-btn');
+    btn.disabled = true;
+    btn.classList.add('loading');
+
+    try {
+        const response = await fetch('/api/feeds/check');
+        const data = await response.json();
+
+        // Reload the page to show updated data
+        window.location.reload();
+    } catch (error) {
+        console.error('Error refreshing feeds:', error);
+        btn.disabled = false;
+        btn.classList.remove('loading');
+    }
+}
+</script>
+{% endblock %}
