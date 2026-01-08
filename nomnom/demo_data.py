@@ -289,77 +289,139 @@ def get_demo_signals():
     """
     Return pre-computed demo signals for demonstration.
 
-    These simulate detected informed money patterns.
+    These simulate detected informed money patterns including on-chain analysis.
     """
     return [
         {
             "market": "Will the Federal Reserve cut interest rates in Q1 2026?",
-            "signal_type": "order_imbalance",
-            "confidence": 0.78,
+            "signal_type": "smart_money_accumulation",
+            "confidence": 0.82,
             "position": "BUY YES",
             "price": 0.72,
-            "edge": 0.08,
+            "edge": 0.10,
             "evidence": [
-                "Strong buy pressure: 42% order imbalance",
-                "Volume spike: 3.2x normal ($847K in 24h)",
-                "Congressional trade: Tommy Tuberville (R) buy $175K in financial sector"
+                "On-chain: 7 fresh wallets (<7 days old) buying YES with 76% avg win rate",
+                "On-chain: $127K accumulated by wallets with >70% historical accuracy",
+                "Order flow: 42% buy imbalance from smart money wallets",
+                "Congressional: Tommy Tuberville (R) buy $175K in financial sector"
             ],
+            "onchain_score": 0.78,
+            "onchain_details": {
+                "fresh_wallets": 7,
+                "smart_money_volume": 127000,
+                "avg_wallet_win_rate": 0.76,
+                "coordinated_wallets": 3
+            },
             "url": "https://polymarket.com/event/fed-rate-cut-q1-2026"
         },
         {
             "market": "Will NVIDIA stock close above $200 by end of January 2026?",
-            "signal_type": "congress_correlation",
-            "confidence": 0.71,
+            "signal_type": "fresh_wallet_activity",
+            "confidence": 0.75,
             "position": "BUY YES",
             "price": 0.58,
-            "edge": 0.07,
+            "edge": 0.09,
             "evidence": [
-                "Congressional trade: Nancy Pelosi (D) buy $750K in NVDA",
-                "Quick disclosure: 3 days (unusual urgency)",
-                "Volume spike: 2.4x normal"
+                "On-chain: 12 new wallets (<5 days) placing large YES bets ($8.5K avg)",
+                "On-chain: Wallet cluster detected - 4 wallets trading in sync (89% correlation)",
+                "Congressional: Nancy Pelosi (D) buy $750K in NVDA (3-day disclosure)",
+                "Volume spike: 2.4x normal with smart money leading"
             ],
+            "onchain_score": 0.85,
+            "onchain_details": {
+                "fresh_wallets": 12,
+                "avg_wallet_age_days": 4.2,
+                "cluster_size": 4,
+                "cluster_correlation": 0.89
+            },
             "url": "https://polymarket.com/event/nvda-200-jan-2026"
         },
         {
             "market": "Will TikTok be banned in the US by July 2026?",
-            "signal_type": "volume_spike",
-            "confidence": 0.65,
+            "signal_type": "coordinated_activity",
+            "confidence": 0.71,
             "position": "BUY YES",
             "price": 0.41,
-            "edge": 0.06,
+            "edge": 0.08,
             "evidence": [
+                "On-chain: Coordinated buying from 6-wallet cluster ($89K total)",
+                "On-chain: 3 wallets with 72%+ win rate accumulating YES",
                 "Volume spike: 4.1x normal ($892K in 24h)",
-                "Multiple congressional trades in tech sector",
-                "High conviction with price momentum"
+                "Multiple congressional trades in tech sector"
             ],
+            "onchain_score": 0.72,
+            "onchain_details": {
+                "coordinated_wallets": 6,
+                "coordinated_volume": 89000,
+                "smart_money_direction": "YES",
+                "time_correlation": 0.91
+            },
             "url": "https://polymarket.com/event/tiktok-ban-july-2026"
         },
         {
             "market": "Will the SEC approve a Solana ETF in 2026?",
-            "signal_type": "order_imbalance",
-            "confidence": 0.62,
+            "signal_type": "smart_money_exit",
+            "confidence": 0.68,
             "position": "BUY NO",
             "price": 0.55,
-            "edge": 0.05,
+            "edge": 0.07,
             "evidence": [
-                "Strong sell pressure: -35% order imbalance",
-                "Regulatory signal pattern detected",
-                "Similar to pre-rejection ETF patterns"
+                "On-chain: High win-rate wallets (>75%) exiting YES positions",
+                "On-chain: $45K sold by wallets that predicted Bitcoin ETF correctly",
+                "Order imbalance: -35% from historically accurate traders",
+                "Pattern match: Similar to pre-rejection ETF wallet behavior"
             ],
+            "onchain_score": 0.65,
+            "onchain_details": {
+                "smart_money_direction": "NO",
+                "exit_volume": 45000,
+                "historical_accuracy": 0.78,
+                "pattern_match": "etf_rejection"
+            },
             "url": "https://polymarket.com/event/solana-etf-2026"
         },
         {
             "market": "Will SpaceX complete a successful Starship orbital flight in Q1 2026?",
-            "signal_type": "price_momentum",
-            "confidence": 0.58,
+            "signal_type": "whale_accumulation",
+            "confidence": 0.64,
             "position": "BUY YES",
             "price": 0.81,
+            "edge": 0.05,
+            "evidence": [
+                "On-chain: 2 whale wallets ($50K+ positions) accumulating YES",
+                "On-chain: Avg whale wallet age 180+ days with 68% win rate",
+                "Consistent accumulation over 14 days (no panic buying)",
+                "High conviction: 81% YES with $445K volume"
+            ],
+            "onchain_score": 0.58,
+            "onchain_details": {
+                "whale_count": 2,
+                "whale_volume": 112000,
+                "avg_whale_win_rate": 0.68,
+                "accumulation_days": 14
+            },
+            "url": "https://polymarket.com/event/starship-orbital-q1-2026"
+        },
+        {
+            "market": "Will Bitcoin reach $150,000 by March 2026?",
+            "signal_type": "order_imbalance",
+            "confidence": 0.59,
+            "position": "BUY NO",
+            "price": 0.66,
             "edge": 0.04,
             "evidence": [
-                "High conviction: 81% YES with $445K volume",
-                "Near resolution: 82 days remaining",
-                "Consistent accumulation pattern"
+                "On-chain: Smart money wallets net selling YES (-$67K)",
+                "On-chain: Fresh wallets buying YES (contrarian indicator)",
+                "Order imbalance: Smart vs retail divergence detected",
+                "High volume ($1.25M/24h) but smart money cautious"
             ],
-            "url": "https://polymarket.com/event/starship-orbital-q1-2026"
+            "onchain_score": 0.52,
+            "onchain_details": {
+                "smart_money_direction": "NO",
+                "retail_direction": "YES",
+                "divergence_score": 0.73,
+                "smart_money_volume": 67000
+            },
+            "url": "https://polymarket.com/event/bitcoin-150k-march-2026"
         },
     ]

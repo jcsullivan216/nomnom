@@ -41,6 +41,9 @@ def get_recommendations_data(use_demo: bool = True, min_confidence: float = 0.3)
                     "evidence": sig["evidence"],
                     "trade_url": sig["url"],
                     "is_buy_yes": "YES" in sig["position"],
+                    "onchain_score": sig.get("onchain_score"),
+                    "onchain_score_pct": int(sig.get("onchain_score", 0) * 100),
+                    "onchain_details": sig.get("onchain_details", {}),
                 })
     else:
         try:
@@ -141,6 +144,11 @@ def format_signal_type(signal_type: str) -> str:
         "congress_correlation": "Congressional Correlation",
         "price_momentum": "Price Momentum",
         "timing_pattern": "Timing Pattern",
+        "smart_money_accumulation": "Smart Money Accumulation",
+        "fresh_wallet_activity": "Fresh Wallet Activity",
+        "coordinated_activity": "Coordinated Wallet Activity",
+        "smart_money_exit": "Smart Money Exit",
+        "whale_accumulation": "Whale Accumulation",
     }
     return labels.get(signal_type, signal_type.replace("_", " ").title())
 
