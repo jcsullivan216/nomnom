@@ -403,6 +403,44 @@ def analyze(market_slug: str, demo: bool):
     console.print(info_table)
 
 
+@cli.command()
+@click.option(
+    "--host", "-h",
+    default="0.0.0.0",
+    help="Host to bind to"
+)
+@click.option(
+    "--port", "-p",
+    default=5000,
+    type=int,
+    help="Port to bind to"
+)
+@click.option(
+    "--debug",
+    is_flag=True,
+    help="Enable debug mode"
+)
+def web(host: str, port: int, debug: bool):
+    """
+    Start the web UI server.
+
+    Launches a web interface for viewing trade recommendations,
+    markets, and congressional trading data.
+    """
+    from .web import run_server
+
+    console.print(Panel.fit(
+        f"[bold cyan]NomNom Web UI[/]\n"
+        f"[dim]Starting server at http://{host}:{port}[/]",
+        box=box.DOUBLE
+    ))
+    console.print()
+    console.print("[dim]Press Ctrl+C to stop the server[/]")
+    console.print()
+
+    run_server(host=host, port=port, debug=debug)
+
+
 def main():
     """Entry point for the CLI."""
     cli()
