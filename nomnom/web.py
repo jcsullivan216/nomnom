@@ -1,5 +1,5 @@
 """
-NomNom Web UI - Flask-based front-end for insider signal detection.
+NomNom Web UI - Flask-based front-end for informed money detection.
 
 Provides a web interface for viewing trade recommendations,
 market data, and congressional trading activity.

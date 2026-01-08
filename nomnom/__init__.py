@@ -1,8 +1,8 @@
 """
-NomNom - Insider Trading Signal Detection for Prediction Markets
+NomNom - Informed Money Detection for Prediction Markets
 
 Detects informed money in prediction markets and provides trade recommendations
-based on the likelihood of insider knowledge.
+based on smart money signal analysis.
 """
 
 __version__ = "0.1.0"

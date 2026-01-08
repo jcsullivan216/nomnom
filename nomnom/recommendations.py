@@ -1,7 +1,7 @@
 """
 Trade recommendation system.
 
-Converts insider trading signals into actionable trade recommendations
+Converts detected signals into actionable trade recommendations
 with direct links to execute trades.
 """
 
@@ -15,7 +15,7 @@ from .signals import InsiderSignal, SignalDetector, calculate_kelly_fraction
 @dataclass
 class TradeRecommendation:
     """
-    Actionable trade recommendation based on insider signals.
+    Actionable trade recommendation based on detected signals.
     """
     market_question: str
     position: str  # "BUY YES" or "BUY NO"
@@ -96,7 +96,7 @@ class RecommendationEngine:
         return recommendations
 
     def _signal_to_recommendation(self, signal: InsiderSignal) -> TradeRecommendation:
-        """Convert an insider signal to a trade recommendation."""
+        """Convert a signal to a trade recommendation."""
         market = signal.market
 
         # Determine position and price
@@ -175,7 +175,7 @@ class RecommendationEngine:
             f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
             "=" * 70,
             "",
-            f"Found {len(recommendations)} opportunities with insider signals:",
+            f"Found {len(recommendations)} opportunities with smart money signals:",
             "",
         ]
 
@@ -193,7 +193,7 @@ class RecommendationEngine:
 
         lines.extend([
             "-" * 70,
-            "DISCLAIMER: This tool detects potential insider activity patterns.",
+            "DISCLAIMER: This tool detects potential informed money patterns.",
             "All trading involves risk. Do your own research before trading.",
             "-" * 70,
         ])

@@ -173,7 +173,7 @@ The most actionable signals combine wallet-level behavioral anomalies (fresh wal
 The methodological frontier involves combining these heterogeneous signals through ensemble machine learning approaches—Bayesian frameworks that weight signal quality by historical predictive power while managing false positive rates through consensus requirements. 
  The firms that operationalize this framework first will capture significant edge before the market matures and arbitrages these inefficiencies away.
 
-# NomNom - Insider Signal Detection App
+# NomNom - Informed Money Detection App
 
 An application that detects informed trading patterns in prediction markets and generates trade recommendations with direct links. Built on the methodological framework described above.
 
@@ -182,7 +182,7 @@ An application that detects informed trading patterns in prediction markets and 
 - **Multi-Signal Detection Engine**: Combines order flow imbalance, volume spikes, congressional trading correlation, price momentum, and timing patterns
 - **Trade Recommendations**: Actionable signals with confidence scores, expected edge, and Kelly-derived position sizing
 - **Direct Trade Links**: One-click links to execute trades on Polymarket
-- **Congressional Trading Monitor**: Track trades by members of Congress for policy insider signals
+- **Congressional Trading Monitor**: Track trades by members of Congress for policy-correlated signals
 - **Web UI & CLI**: Both a modern web interface and command-line tools
 - **API Endpoints**: JSON APIs for integration with other tools
 
@@ -225,7 +225,7 @@ Then open http://localhost:5000 in your browser.
 ### Using the CLI
 
 ```bash
-# Scan for insider signals (use --demo if no network access)
+# Scan for informed money signals (use --demo if no network access)
 python main.py scan --demo
 
 # Scan with custom confidence threshold
@@ -328,7 +328,7 @@ TRADE NOW: https://polymarket.com/event/fed-rate-cut-q1-2026
 
 ## Disclaimer
 
-This tool detects potential insider activity patterns for educational and research purposes only. All trading involves risk. The signals generated are probabilistic indicators, not guarantees. Do your own research before making any trades. This is not financial advice.
+This tool detects potential informed money patterns for educational and research purposes only. All trading involves risk. The signals generated are probabilistic indicators, not guarantees. Do your own research before making any trades. This is not financial advice.
 
 ---
 
