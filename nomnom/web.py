@@ -12,6 +12,8 @@ from .recommendations import RecommendationEngine, TradeRecommendation
 from .polymarket import PolymarketClient
 from .congress import CongressTradingClient
 from .demo_data import get_demo_markets, get_demo_congress_trades, get_demo_signals
+from .feeds import get_feed_manager, HealthStatus
+from .onchain import OnChainAnalyzer, get_demo_onchain_indicators
 
 
 app = Flask(__name__)
@@ -189,6 +191,115 @@ def api_congress():
     use_demo = request.args.get("demo", "true").lower() == "true"
     data = get_congress_data(use_demo=use_demo, days=days)
     return jsonify({"trades": data, "count": len(data)})
+
+
+@app.route("/onchain")
+def onchain():
+    """On-chain analysis page."""
+    analyzer = OnChainAnalyzer()
+
+    # Get demo indicators
+    indicators = get_demo_onchain_indicators()
+
+    # Get signals for demo markets
+    all_signals = []
+    demo_market_ids = ["fed-rate-cut", "nvda-200", "tiktok-ban", "btc-150k"]
+    for market_id in demo_market_ids:
+        signals = analyzer.get_market_onchain_signals(market_id)
+        all_signals.extend(signals)
+
+    # Sort by strength
+    all_signals.sort(key=lambda s: s.strength, reverse=True)
+
+    # Get notable wallets
+    wallets = analyzer.get_top_wallets_for_market("demo", limit=10)
+    # Sort by risk level
+    risk_order = {"very_high": 0, "high": 1, "medium": 2, "low": 3}
+    wallets.sort(key=lambda w: risk_order.get(w.risk_level.value, 4))
+
+    return render_template(
+        "onchain.html",
+        indicators=indicators,
+        signals=all_signals[:10],
+        wallets=wallets
+    )
+
+
+@app.route("/feeds")
+def feeds():
+    """Data feeds monitoring page."""
+    manager = get_feed_manager()
+    categories = manager.get_feeds_by_category()
+    summary = manager.get_feed_summary()
+
+    # Get last check time from any feed
+    last_check = None
+    for feed in manager.feeds.values():
+        if feed.last_check:
+            if last_check is None or feed.last_check > last_check:
+                last_check = feed.last_check
+
+    return render_template(
+        "feeds.html",
+        categories=categories,
+        summary=summary,
+        last_check=last_check.strftime("%Y-%m-%d %H:%M:%S") if last_check else None
+    )
+
+
+@app.route("/api/feeds")
+def api_feeds():
+    """API endpoint for data feeds status."""
+    manager = get_feed_manager()
+    feeds_data = []
+
+    for feed in manager.feeds.values():
+        feeds_data.append({
+            "id": feed.id,
+            "name": feed.name,
+            "category": feed.category,
+            "status": feed.status.value,
+            "response_time_ms": feed.response_time_ms,
+            "last_check": feed.last_check.isoformat() if feed.last_check else None,
+            "error_message": feed.error_message,
+            "requires_auth": feed.requires_auth,
+            "is_free": feed.is_free,
+        })
+
+    return jsonify({
+        "feeds": feeds_data,
+        "summary": manager.get_feed_summary()
+    })
+
+
+@app.route("/api/feeds/check")
+def api_feeds_check():
+    """Trigger health check for all feeds."""
+    manager = get_feed_manager()
+    manager.check_all_feeds()
+    return jsonify({
+        "status": "ok",
+        "summary": manager.get_feed_summary(),
+        "checked_at": datetime.now().isoformat()
+    })
+
+
+@app.route("/api/feeds/<feed_id>/check")
+def api_feed_check(feed_id: str):
+    """Check health of a specific feed."""
+    manager = get_feed_manager()
+    try:
+        feed = manager.check_feed_health(feed_id)
+        return jsonify({
+            "id": feed.id,
+            "name": feed.name,
+            "status": feed.status.value,
+            "response_time_ms": feed.response_time_ms,
+            "error_message": feed.error_message,
+            "checked_at": datetime.now().isoformat()
+        })
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 404
 
 
 def run_server(host: str = "0.0.0.0", port: int = 5000, debug: bool = False):

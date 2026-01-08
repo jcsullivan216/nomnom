@@ -1,0 +1,352 @@
+{% extends "base.html" %}
+
+{% block title %}On-Chain Signals{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .indicators-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .indicator-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 24px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .indicator-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+    }
+
+    .indicator-card.warning::before { background: var(--accent-yellow); }
+    .indicator-card.bullish::before { background: var(--accent-green); }
+    .indicator-card.bearish::before { background: var(--accent-red); }
+    .indicator-card.info::before { background: var(--accent-blue); }
+    .indicator-card.neutral::before { background: var(--text-muted); }
+
+    .indicator-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 12px;
+    }
+
+    .indicator-name {
+        font-weight: 600;
+        font-size: 1rem;
+        color: var(--text-primary);
+    }
+
+    .indicator-change {
+        font-size: 0.85rem;
+        padding: 4px 10px;
+        border-radius: 12px;
+    }
+
+    .indicator-change.positive {
+        background: rgba(63, 185, 80, 0.15);
+        color: var(--accent-green);
+    }
+
+    .indicator-change.negative {
+        background: rgba(248, 81, 73, 0.15);
+        color: var(--accent-red);
+    }
+
+    .indicator-change.neutral {
+        background: var(--bg-hover);
+        color: var(--text-secondary);
+    }
+
+    .indicator-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+    }
+
+    .indicator-description {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin-bottom: 12px;
+    }
+
+    .indicator-details {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        padding-top: 12px;
+        border-top: 1px solid var(--border);
+    }
+
+    .wallet-section {
+        margin-top: 40px;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+    }
+
+    .wallet-table {
+        width: 100%;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .wallet-table th {
+        background: var(--bg-hover);
+        padding: 16px;
+        text-align: left;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+    }
+
+    .wallet-table td {
+        padding: 16px;
+        border-top: 1px solid var(--border);
+    }
+
+    .wallet-address {
+        font-family: monospace;
+        font-size: 0.85rem;
+        color: var(--accent-blue);
+    }
+
+    .risk-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .risk-low {
+        background: rgba(63, 185, 80, 0.15);
+        color: var(--accent-green);
+    }
+
+    .risk-medium {
+        background: rgba(210, 153, 34, 0.15);
+        color: var(--accent-yellow);
+    }
+
+    .risk-high {
+        background: rgba(248, 81, 73, 0.15);
+        color: var(--accent-red);
+    }
+
+    .risk-very_high {
+        background: rgba(248, 81, 73, 0.3);
+        color: var(--accent-red);
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+
+    .win-rate {
+        font-weight: 600;
+    }
+
+    .win-rate.high { color: var(--accent-green); }
+    .win-rate.medium { color: var(--accent-yellow); }
+    .win-rate.low { color: var(--text-secondary); }
+
+    .signal-list {
+        list-style: none;
+        margin-top: 30px;
+    }
+
+    .signal-item {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 16px;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .signal-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+
+    .signal-icon.fresh { background: rgba(210, 153, 34, 0.15); }
+    .signal-icon.smart { background: rgba(63, 185, 80, 0.15); }
+    .signal-icon.coordinated { background: rgba(163, 113, 247, 0.15); }
+    .signal-icon.imbalance { background: rgba(88, 166, 255, 0.15); }
+
+    .signal-content h4 {
+        margin-bottom: 6px;
+        color: var(--text-primary);
+    }
+
+    .signal-content p {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
+    .signal-strength {
+        text-align: right;
+    }
+
+    .signal-strength-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .signal-strength-label {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+    }
+
+    .info-banner {
+        background: rgba(88, 166, 255, 0.1);
+        border: 1px solid rgba(88, 166, 255, 0.3);
+        border-radius: 8px;
+        padding: 16px 20px;
+        margin-bottom: 24px;
+        color: var(--accent-blue);
+    }
+
+    .info-banner strong {
+        display: block;
+        margin-bottom: 6px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>&#9939; On-Chain Signals</h1>
+    <p>Wallet behavior analysis and smart money indicators from Polymarket</p>
+</div>
+
+<div class="info-banner">
+    <strong>&#128161; How This Works</strong>
+    On-chain analysis tracks wallet behavior on Polygon to identify informed trading patterns.
+    Fresh wallets with high accuracy, coordinated activity, and unusual order flow are key signals.
+</div>
+
+<div class="indicators-grid">
+    {% for indicator in indicators %}
+    <div class="indicator-card {{ indicator.status }}">
+        <div class="indicator-header">
+            <span class="indicator-name">{{ indicator.name }}</span>
+            <span class="indicator-change {% if '+' in indicator.change %}positive{% elif '-' in indicator.change %}negative{% else %}neutral{% endif %}">
+                {{ indicator.change }}
+            </span>
+        </div>
+        <div class="indicator-value">{{ indicator.current_value }}</div>
+        <div class="indicator-description">{{ indicator.description }}</div>
+        <div class="indicator-details">{{ indicator.details }}</div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="wallet-section">
+    <div class="section-header">
+        <h2 class="section-title">&#128373; Recent Signals</h2>
+    </div>
+
+    <ul class="signal-list">
+        {% for signal in signals %}
+        <li class="signal-item">
+            <div class="signal-icon {% if signal.signal_type == 'fresh_wallet_activity' %}fresh{% elif signal.signal_type == 'smart_money_accumulation' %}smart{% elif signal.signal_type == 'coordinated_activity' %}coordinated{% else %}imbalance{% endif %}">
+                {% if signal.signal_type == 'fresh_wallet_activity' %}&#128293;{% endif %}
+                {% if signal.signal_type == 'smart_money_accumulation' %}&#129504;{% endif %}
+                {% if signal.signal_type == 'coordinated_activity' %}&#127760;{% endif %}
+                {% if signal.signal_type == 'order_imbalance' %}&#128200;{% endif %}
+            </div>
+            <div class="signal-content">
+                <h4>{{ signal.description }}</h4>
+                <p>
+                    {{ signal.wallets_involved }} wallets |
+                    ${{ "{:,.0f}".format(signal.total_volume) }} volume |
+                    Direction: {{ signal.details.get('direction', signal.details.get('dominant_side', 'N/A')) }}
+                </p>
+            </div>
+            <div class="signal-strength">
+                <div class="signal-strength-value" style="color: {% if signal.strength > 0.7 %}var(--accent-green){% elif signal.strength > 0.5 %}var(--accent-yellow){% else %}var(--text-secondary){% endif %}">
+                    {{ (signal.strength * 100)|int }}%
+                </div>
+                <div class="signal-strength-label">Strength</div>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="wallet-section">
+    <div class="section-header">
+        <h2 class="section-title">&#128176; Notable Wallets</h2>
+    </div>
+
+    <table class="wallet-table">
+        <thead>
+            <tr>
+                <th>Address</th>
+                <th>Age</th>
+                <th>Trades</th>
+                <th>Win Rate</th>
+                <th>Volume</th>
+                <th>Risk Level</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for wallet in wallets %}
+            <tr>
+                <td>
+                    <span class="wallet-address">{{ wallet.address[:10] }}...{{ wallet.address[-6:] }}</span>
+                </td>
+                <td>{{ wallet.wallet_age_days }}d</td>
+                <td>{{ wallet.total_trades }}</td>
+                <td>
+                    <span class="win-rate {% if wallet.win_rate > 0.7 %}high{% elif wallet.win_rate > 0.5 %}medium{% else %}low{% endif %}">
+                        {{ (wallet.win_rate * 100)|int }}%
+                    </span>
+                </td>
+                <td>${{ "{:,.0f}".format(wallet.total_volume_usd) }}</td>
+                <td>
+                    <span class="risk-badge risk-{{ wallet.risk_level.value }}">
+                        {{ wallet.risk_level.value | replace("_", " ") }}
+                    </span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
