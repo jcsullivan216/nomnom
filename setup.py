@@ -11,7 +11,7 @@ with open("requirements.txt", "r", encoding="utf-8") as f:
 setup(
     name="nomnom",
     version="0.1.0",
-    description="Detect insider trading signals in prediction markets",
+    description="Detect informed money signals in prediction markets",
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="NomNom",

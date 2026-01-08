@@ -1,5 +1,5 @@
 """
-Insider trading signal detection engine.
+Informed money signal detection engine.
 
 Combines multiple weak signals through ensemble methods to detect
 informed trading in prediction markets.
@@ -22,7 +22,7 @@ from .congress import CongressTrade, CongressTradingClient
 @dataclass
 class InsiderSignal:
     """
-    Represents a detected insider trading signal.
+    Represents a detected informed money signal.
 
     Combines evidence from multiple sources with a confidence score.
     """
@@ -43,7 +43,7 @@ class InsiderSignal:
 
 class SignalDetector:
     """
-    Detects insider trading signals in prediction markets.
+    Detects informed money signals in prediction markets.
 
     Uses multiple signal sources:
     1. Market microstructure (volume, order imbalance, spreads)
@@ -72,7 +72,7 @@ class SignalDetector:
 
     def scan_markets(self, limit: int = 50) -> list[InsiderSignal]:
         """
-        Scan active markets for insider trading signals.
+        Scan active markets for informed money signals.
 
         Args:
             limit: Maximum number of markets to scan
@@ -102,7 +102,7 @@ class SignalDetector:
         congress_trades: list[CongressTrade]
     ) -> Optional[InsiderSignal]:
         """
-        Analyze a single market for insider trading signals.
+        Analyze a single market for informed money signals.
 
         Combines multiple signal types with weighted scoring.
         """

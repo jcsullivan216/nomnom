@@ -2,7 +2,7 @@
 Congressional trading data client.
 
 Fetches congressional stock trades from public disclosure databases.
-These trades can signal policy insider knowledge that affects prediction markets.
+These trades may correlate with policy outcomes that affect prediction markets.
 """
 
 import requests
@@ -294,7 +294,7 @@ class CongressTradingClient:
         """
         Identify potentially unusual congressional trades.
 
-        Flags trades that may indicate insider knowledge:
+        Flags trades that may be noteworthy:
         - Large amounts ($100k+)
         - Short disclosure delays (filed quickly = time-sensitive?)
         - Clusters of similar trades across multiple members

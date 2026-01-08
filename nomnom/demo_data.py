@@ -289,7 +289,7 @@ def get_demo_signals():
     """
     Return pre-computed demo signals for demonstration.
 
-    These simulate detected insider trading patterns.
+    These simulate detected informed money patterns.
     """
     return [
         {
@@ -343,7 +343,7 @@ def get_demo_signals():
             "edge": 0.05,
             "evidence": [
                 "Strong sell pressure: -35% order imbalance",
-                "Regulatory insider pattern detected",
+                "Regulatory signal pattern detected",
                 "Similar to pre-rejection ETF patterns"
             ],
             "url": "https://polymarket.com/event/solana-etf-2026"

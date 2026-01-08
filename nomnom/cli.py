@@ -1,5 +1,5 @@
 """
-NomNom CLI - Insider Trading Signal Detection
+NomNom CLI - Informed Money Signal Detection
 
 Command-line interface for detecting informed money in prediction markets
 and generating trade recommendations.
@@ -27,7 +27,7 @@ console = Console()
 @click.version_option(version="0.1.0", prog_name="nomnom")
 def cli():
     """
-    NomNom - Detect insider trading signals in prediction markets.
+    NomNom - Detect informed money signals in prediction markets.
 
     Scans prediction markets for signs of informed money and generates
     trade recommendations with direct links to execute trades.
@@ -60,7 +60,7 @@ def cli():
 )
 def scan(min_confidence: float, max_results: int, output_json: bool, demo: bool):
     """
-    Scan markets for insider trading signals.
+    Scan markets for informed money signals.
 
     Analyzes active prediction markets for patterns indicating informed trading:
     - Order flow imbalance
@@ -95,7 +95,7 @@ def scan(min_confidence: float, max_results: int, output_json: bool, demo: bool)
                 recommendations.append(rec)
     else:
         # Try live data
-        with console.status("[bold green]Scanning markets for insider signals...[/]"):
+        with console.status("[bold green]Scanning markets for informed money signals...[/]"):
             try:
                 engine = RecommendationEngine()
                 recommendations = engine.get_recommendations(
@@ -133,7 +133,7 @@ def scan(min_confidence: float, max_results: int, output_json: bool, demo: bool)
 
     if not recommendations:
         console.print(Panel(
-            "[yellow]No significant insider signals detected.[/]\n\n"
+            "[yellow]No significant signals detected.[/]\n\n"
             "Try lowering the confidence threshold with --min-confidence 0.3\n"
             "Or use --demo to see example output",
             title="NomNom Scan Results"
@@ -143,7 +143,7 @@ def scan(min_confidence: float, max_results: int, output_json: bool, demo: bool)
     # Display header
     console.print()
     console.print(Panel.fit(
-        "[bold cyan]NOMNOM INSIDER SIGNAL DETECTION[/]\n"
+        "[bold cyan]NOMNOM SMART MONEY DETECTION[/]\n"
         f"[dim]Found {len(recommendations)} trade opportunities[/]",
         box=box.DOUBLE
     ))
@@ -157,7 +157,7 @@ def scan(min_confidence: float, max_results: int, output_json: bool, demo: bool)
     console.print()
     console.print(Panel(
         "[bold yellow]DISCLAIMER[/]\n"
-        "This tool detects potential insider activity patterns.\n"
+        "This tool detects potential informed money patterns.\n"
         "All trading involves risk. Do your own research before trading.",
         box=box.ROUNDED
     ))
@@ -287,7 +287,7 @@ def congress(days: int, chamber: str, demo: bool):
     """
     View recent congressional trading activity.
 
-    Shows trades by members of Congress that may indicate insider knowledge.
+    Shows trades by members of Congress that may correlate with policy outcomes.
     """
     if demo:
         trades = get_demo_congress_trades()
@@ -346,7 +346,7 @@ def congress(days: int, chamber: str, demo: bool):
 @click.option("--demo", is_flag=True, help="Use demo data")
 def analyze(market_slug: str, demo: bool):
     """
-    Analyze a specific market for insider signals.
+    Analyze a specific market for smart money signals.
 
     Provide the market slug from the Polymarket URL.
     Example: nomnom analyze fed-rate-cut-q1-2026 --demo
