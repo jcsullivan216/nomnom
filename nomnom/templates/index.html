@@ -114,6 +114,16 @@
         border-left: 3px solid var(--accent-purple);
     }
 
+    .evidence-item.onchain {
+        border-left-color: var(--accent-blue);
+        background: rgba(88, 166, 255, 0.05);
+    }
+
+    .evidence-item.congressional {
+        border-left-color: var(--accent-yellow);
+        background: rgba(210, 153, 34, 0.05);
+    }
+
     .evidence-icon {
         flex-shrink: 0;
         width: 24px;
@@ -126,6 +136,36 @@
         font-size: 0.75rem;
         color: white;
         font-weight: 700;
+    }
+
+    .evidence-item.onchain .evidence-icon {
+        background: var(--accent-blue);
+    }
+
+    .evidence-item.congressional .evidence-icon {
+        background: var(--accent-yellow);
+    }
+
+    /* On-Chain Score Badge */
+    .onchain-score-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        background: rgba(88, 166, 255, 0.15);
+        border: 1px solid rgba(88, 166, 255, 0.3);
+        border-radius: 8px;
+        margin-left: 12px;
+    }
+
+    .onchain-score-badge .score {
+        font-weight: 700;
+        color: var(--accent-blue);
+    }
+
+    .onchain-score-badge .label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
     }
 
     .evidence-text {
@@ -256,6 +296,16 @@
         </div>
         <div class="summary-label">Avg Confidence</div>
     </div>
+    <div class="summary-card">
+        <div class="summary-number" style="color: var(--accent-blue);">
+            {% if recommendations %}
+                {{ ((recommendations|map(attribute='onchain_score_pct')|sum / recommendations|length))|int }}%
+            {% else %}
+                0%
+            {% endif %}
+        </div>
+        <div class="summary-label">Avg On-Chain Score</div>
+    </div>
 </div>
 
 <div class="disclaimer">
@@ -283,6 +333,15 @@
                 <div class="bar">
                     <div class="fill {% if rec.confidence >= 0.7 %}confidence-high{% elif rec.confidence >= 0.5 %}confidence-medium{% else %}confidence-low{% endif %}"
                          style="width: {{ rec.confidence_pct }}%"></div>
+                </div>
+            </div>
+        </div>
+        <div class="metric">
+            <div class="metric-value blue">{{ rec.onchain_score_pct }}%</div>
+            <div class="metric-label">On-Chain Score</div>
+            <div class="confidence-indicator">
+                <div class="bar">
+                    <div class="fill" style="width: {{ rec.onchain_score_pct }}%; background: var(--accent-blue);"></div>
                 </div>
             </div>
         </div>
@@ -318,8 +377,10 @@
 
         <ul class="evidence-list">
             {% for evidence in rec.evidence %}
-            <li class="evidence-item">
-                <span class="evidence-icon">{{ loop.index }}</span>
+            <li class="evidence-item {% if 'On-chain' in evidence %}onchain{% elif 'Congressional' in evidence %}congressional{% endif %}">
+                <span class="evidence-icon">
+                    {% if 'On-chain' in evidence %}&#9939;{% elif 'Congressional' in evidence %}&#127963;{% else %}{{ loop.index }}{% endif %}
+                </span>
                 <span class="evidence-text">{{ evidence }}</span>
             </li>
             {% endfor %}
