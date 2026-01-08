@@ -13,11 +13,13 @@ def get_demo_markets() -> list[Market]:
     """Return demo prediction markets."""
     now = datetime.now()
 
+    # Demo markets link to Polymarket browse with relevant search terms
+    # so users can find real similar markets
     return [
         Market(
             id="1",
             question="Will the Federal Reserve cut interest rates in Q1 2026?",
-            slug="fed-rate-cut-q1-2026",
+            slug="browse?_c=fed-rate",
             yes_price=0.72,
             no_price=0.28,
             volume_24h=847000,
@@ -25,13 +27,13 @@ def get_demo_markets() -> list[Market]:
             liquidity=1200000,
             end_date=now + timedelta(days=45),
             category="Economics",
-            url="https://polymarket.com/event/fed-rate-cut-q1-2026",
+            url="https://polymarket.com/browse?_c=fed-rate",
             tokens=[{"outcome": "Yes", "token_id": "demo1", "price": 0.72}]
         ),
         Market(
             id="2",
             question="Will Bitcoin reach $150,000 by March 2026?",
-            slug="bitcoin-150k-march-2026",
+            slug="browse?_c=bitcoin-price",
             yes_price=0.34,
             no_price=0.66,
             volume_24h=1250000,
@@ -39,13 +41,13 @@ def get_demo_markets() -> list[Market]:
             liquidity=3500000,
             end_date=now + timedelta(days=60),
             category="Crypto",
-            url="https://polymarket.com/event/bitcoin-150k-march-2026",
+            url="https://polymarket.com/browse?_c=bitcoin-price",
             tokens=[{"outcome": "Yes", "token_id": "demo2", "price": 0.34}]
         ),
         Market(
             id="3",
             question="Will NVIDIA stock close above $200 by end of January 2026?",
-            slug="nvda-200-jan-2026",
+            slug="browse?_c=nvidia",
             yes_price=0.58,
             no_price=0.42,
             volume_24h=523000,
@@ -53,13 +55,13 @@ def get_demo_markets() -> list[Market]:
             liquidity=890000,
             end_date=now + timedelta(days=23),
             category="Stocks",
-            url="https://polymarket.com/event/nvda-200-jan-2026",
+            url="https://polymarket.com/browse?_c=nvidia",
             tokens=[{"outcome": "Yes", "token_id": "demo3", "price": 0.58}]
         ),
         Market(
             id="4",
             question="Will there be a new COVID variant of concern declared in 2026?",
-            slug="covid-variant-2026",
+            slug="browse?_c=covid",
             yes_price=0.23,
             no_price=0.77,
             volume_24h=156000,
@@ -67,13 +69,13 @@ def get_demo_markets() -> list[Market]:
             liquidity=450000,
             end_date=now + timedelta(days=357),
             category="Science",
-            url="https://polymarket.com/event/covid-variant-2026",
+            url="https://polymarket.com/browse?_c=covid",
             tokens=[{"outcome": "Yes", "token_id": "demo4", "price": 0.23}]
         ),
         Market(
             id="5",
             question="Will TikTok be banned in the US by July 2026?",
-            slug="tiktok-ban-july-2026",
+            slug="browse?_c=tiktok",
             yes_price=0.41,
             no_price=0.59,
             volume_24h=892000,
@@ -81,13 +83,13 @@ def get_demo_markets() -> list[Market]:
             liquidity=1800000,
             end_date=now + timedelta(days=180),
             category="Politics",
-            url="https://polymarket.com/event/tiktok-ban-july-2026",
+            url="https://polymarket.com/browse?_c=tiktok",
             tokens=[{"outcome": "Yes", "token_id": "demo5", "price": 0.41}]
         ),
         Market(
             id="6",
             question="Will Apple announce AR glasses at WWDC 2026?",
-            slug="apple-ar-glasses-wwdc-2026",
+            slug="browse?_c=apple",
             yes_price=0.67,
             no_price=0.33,
             volume_24h=234000,
@@ -95,13 +97,13 @@ def get_demo_markets() -> list[Market]:
             liquidity=620000,
             end_date=now + timedelta(days=150),
             category="Tech",
-            url="https://polymarket.com/event/apple-ar-glasses-wwdc-2026",
+            url="https://polymarket.com/browse?_c=apple",
             tokens=[{"outcome": "Yes", "token_id": "demo6", "price": 0.67}]
         ),
         Market(
             id="7",
             question="Will SpaceX complete a successful Starship orbital flight in Q1 2026?",
-            slug="starship-orbital-q1-2026",
+            slug="browse?_c=spacex",
             yes_price=0.81,
             no_price=0.19,
             volume_24h=445000,
@@ -109,13 +111,13 @@ def get_demo_markets() -> list[Market]:
             liquidity=1100000,
             end_date=now + timedelta(days=82),
             category="Space",
-            url="https://polymarket.com/event/starship-orbital-q1-2026",
+            url="https://polymarket.com/browse?_c=spacex",
             tokens=[{"outcome": "Yes", "token_id": "demo7", "price": 0.81}]
         ),
         Market(
             id="8",
             question="Will the SEC approve a Solana ETF in 2026?",
-            slug="solana-etf-2026",
+            slug="browse?_c=solana-etf",
             yes_price=0.45,
             no_price=0.55,
             volume_24h=678000,
@@ -123,13 +125,13 @@ def get_demo_markets() -> list[Market]:
             liquidity=1400000,
             end_date=now + timedelta(days=340),
             category="Crypto",
-            url="https://polymarket.com/event/solana-etf-2026",
+            url="https://polymarket.com/browse?_c=solana-etf",
             tokens=[{"outcome": "Yes", "token_id": "demo8", "price": 0.45}]
         ),
         Market(
             id="9",
             question="Will unemployment rate exceed 5% by mid-2026?",
-            slug="unemployment-5-pct-2026",
+            slug="browse?_c=unemployment",
             yes_price=0.28,
             no_price=0.72,
             volume_24h=312000,
@@ -137,13 +139,13 @@ def get_demo_markets() -> list[Market]:
             liquidity=780000,
             end_date=now + timedelta(days=180),
             category="Economics",
-            url="https://polymarket.com/event/unemployment-5-pct-2026",
+            url="https://polymarket.com/browse?_c=unemployment",
             tokens=[{"outcome": "Yes", "token_id": "demo9", "price": 0.28}]
         ),
         Market(
             id="10",
             question="Will GPT-5 be released by OpenAI in H1 2026?",
-            slug="gpt-5-h1-2026",
+            slug="browse?_c=openai",
             yes_price=0.53,
             no_price=0.47,
             volume_24h=567000,
@@ -151,7 +153,7 @@ def get_demo_markets() -> list[Market]:
             liquidity=1650000,
             end_date=now + timedelta(days=175),
             category="AI",
-            url="https://polymarket.com/event/gpt-5-h1-2026",
+            url="https://polymarket.com/browse?_c=openai",
             tokens=[{"outcome": "Yes", "token_id": "demo10", "price": 0.53}]
         ),
     ]
@@ -312,7 +314,7 @@ def get_demo_signals():
                 "avg_wallet_win_rate": 0.76,
                 "coordinated_wallets": 3
             },
-            "url": "https://polymarket.com/event/fed-rate-cut-q1-2026"
+            "url": "https://polymarket.com/browse?_c=fed-rate"
         },
         {
             "market": "Will NVIDIA stock close above $200 by end of January 2026?",
@@ -334,7 +336,7 @@ def get_demo_signals():
                 "cluster_size": 4,
                 "cluster_correlation": 0.89
             },
-            "url": "https://polymarket.com/event/nvda-200-jan-2026"
+            "url": "https://polymarket.com/browse?_c=nvidia"
         },
         {
             "market": "Will TikTok be banned in the US by July 2026?",
@@ -356,7 +358,7 @@ def get_demo_signals():
                 "smart_money_direction": "YES",
                 "time_correlation": 0.91
             },
-            "url": "https://polymarket.com/event/tiktok-ban-july-2026"
+            "url": "https://polymarket.com/browse?_c=tiktok"
         },
         {
             "market": "Will the SEC approve a Solana ETF in 2026?",
@@ -378,7 +380,7 @@ def get_demo_signals():
                 "historical_accuracy": 0.78,
                 "pattern_match": "etf_rejection"
             },
-            "url": "https://polymarket.com/event/solana-etf-2026"
+            "url": "https://polymarket.com/browse?_c=solana-etf"
         },
         {
             "market": "Will SpaceX complete a successful Starship orbital flight in Q1 2026?",
@@ -400,7 +402,7 @@ def get_demo_signals():
                 "avg_whale_win_rate": 0.68,
                 "accumulation_days": 14
             },
-            "url": "https://polymarket.com/event/starship-orbital-q1-2026"
+            "url": "https://polymarket.com/browse?_c=spacex"
         },
         {
             "market": "Will Bitcoin reach $150,000 by March 2026?",
@@ -422,6 +424,6 @@ def get_demo_signals():
                 "divergence_score": 0.73,
                 "smart_money_volume": 67000
             },
-            "url": "https://polymarket.com/event/bitcoin-150k-march-2026"
+            "url": "https://polymarket.com/browse?_c=bitcoin-price"
         },
     ]

@@ -96,7 +96,7 @@ def get_markets_data(use_demo: bool = True, limit: int = 20):
             "total_volume": f"${m.total_volume:,.0f}",
             "liquidity": f"${m.liquidity:,.0f}",
             "category": m.category or "General",
-            "trade_url": m.trade_url,
+            "trade_url": m.url,
             "end_date": m.end_date.strftime("%Y-%m-%d") if m.end_date else None,
         }
         for m in markets
