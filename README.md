@@ -173,4 +173,163 @@ The most actionable signals combine wallet-level behavioral anomalies (fresh wal
 The methodological frontier involves combining these heterogeneous signals through ensemble machine learning approaches—Bayesian frameworks that weight signal quality by historical predictive power while managing false positive rates through consensus requirements. 
  The firms that operationalize this framework first will capture significant edge before the market matures and arbitrages these inefficiencies away.
 
-# nomnom
+# NomNom - Insider Signal Detection App
+
+An application that detects informed trading patterns in prediction markets and generates trade recommendations with direct links. Built on the methodological framework described above.
+
+## Features
+
+- **Multi-Signal Detection Engine**: Combines order flow imbalance, volume spikes, congressional trading correlation, price momentum, and timing patterns
+- **Trade Recommendations**: Actionable signals with confidence scores, expected edge, and Kelly-derived position sizing
+- **Direct Trade Links**: One-click links to execute trades on Polymarket
+- **Congressional Trading Monitor**: Track trades by members of Congress for policy insider signals
+- **Web UI & CLI**: Both a modern web interface and command-line tools
+- **API Endpoints**: JSON APIs for integration with other tools
+
+## Quick Start
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/nomnom.git
+cd nomnom
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Or install as a package
+pip install -e .
+```
+
+### Requirements
+
+- Python 3.10+
+- Dependencies: requests, pandas, numpy, flask, rich, click
+
+### Running the Web UI
+
+```bash
+# Start the web server
+python main.py web
+
+# Or with custom host/port
+python main.py web --host 127.0.0.1 --port 8080
+
+# Enable debug mode for development
+python main.py web --debug
+```
+
+Then open http://localhost:5000 in your browser.
+
+### Using the CLI
+
+```bash
+# Scan for insider signals (use --demo if no network access)
+python main.py scan --demo
+
+# Scan with custom confidence threshold
+python main.py scan --min-confidence 0.6 --max-results 5
+
+# Output as JSON for integration
+python main.py scan --demo --json
+
+# List active markets with trade links
+python main.py markets --demo
+
+# View congressional trading activity
+python main.py congress --demo
+
+# Filter by chamber
+python main.py congress --demo --chamber senate
+
+# Analyze a specific market
+python main.py analyze fed-rate-cut-q1-2026 --demo
+```
+
+## Project Structure
+
+```
+nomnom/
+├── main.py                 # Entry point
+├── requirements.txt        # Dependencies
+├── setup.py               # Package setup
+└── nomnom/
+    ├── __init__.py
+    ├── cli.py             # CLI interface
+    ├── web.py             # Flask web app
+    ├── polymarket.py      # Polymarket API client
+    ├── congress.py        # Congressional trading data
+    ├── signals.py         # Signal detection engine
+    ├── recommendations.py # Trade recommendations
+    ├── demo_data.py       # Demo data for testing
+    └── templates/         # HTML templates
+        ├── base.html
+        ├── index.html
+        ├── markets.html
+        └── congress.html
+```
+
+## Signal Types
+
+The detection engine analyzes multiple signals, weighted by empirical robustness:
+
+| Signal | Weight | Description |
+|--------|--------|-------------|
+| Order Imbalance | 30% | Buy/sell pressure from order book analysis |
+| Congressional Correlation | 25% | Trades by Congress members in related sectors |
+| Volume Spike | 20% | Unusual 24h volume relative to historical average |
+| Price Momentum | 15% | Conviction patterns near price extremes |
+| Timing Pattern | 10% | Activity near resolution or disclosure windows |
+
+## API Endpoints
+
+The web server exposes JSON APIs:
+
+```bash
+# Get trade recommendations
+GET /api/recommendations?min_confidence=0.5&demo=true
+
+# Get active markets
+GET /api/markets?limit=20&demo=true
+
+# Get congressional trades
+GET /api/congress?days=30&demo=true
+```
+
+## Example Output
+
+```
+TRADE RECOMMENDATION
+====================
+Market: Will the Federal Reserve cut interest rates in Q1 2026?
+
+Position:     BUY YES
+Confidence:   78%
+Current Price: $0.72
+Expected Edge: 8.0%
+Suggested Size: 4.0% of bankroll
+
+Signal Type: Order Flow Imbalance
+
+Why This Recommendation:
+  1. Strong buy pressure: 42% order imbalance
+  2. Volume spike: 3.2x normal ($847K in 24h)
+  3. Congressional trade: Tommy Tuberville (R) buy $175K in financial sector
+
+TRADE NOW: https://polymarket.com/event/fed-rate-cut-q1-2026
+```
+
+## Data Sources
+
+- **Polymarket**: gamma-api.polymarket.com for market data, clob.polymarket.com for order books
+- **Congressional Trading**: House Stock Watcher and Senate Stock Watcher public APIs
+- **Demo Mode**: Built-in realistic demo data for testing without network access
+
+## Disclaimer
+
+This tool detects potential insider activity patterns for educational and research purposes only. All trading involves risk. The signals generated are probabilistic indicators, not guarantees. Do your own research before making any trades. This is not financial advice.
+
+---
+
+## Methodological Framework
