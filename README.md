@@ -195,12 +195,24 @@ An application that detects informed trading patterns in prediction markets and 
 git clone https://github.com/yourusername/nomnom.git
 cd nomnom
 
-# Install dependencies
+# Option 1: Install dependencies only (recommended for quick start)
 pip install -r requirements.txt
 
-# Or install as a package
+# Option 2: Install as a package (for CLI access anywhere)
+pip install .
+
+# Option 3: Install in development mode
 pip install -e .
 ```
+
+**Troubleshooting pip:**
+- If you get permission errors, try: `pip install --user -r requirements.txt`
+- For virtual environment (recommended):
+  ```bash
+  python -m venv venv
+  source venv/bin/activate  # On Windows: venv\Scripts\activate
+  pip install -r requirements.txt
+  ```
 
 ### Requirements
 
